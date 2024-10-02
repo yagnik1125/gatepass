@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const GatepassForm = () => {
+const GatepassForm = ({ onFormSubmit }) => {
     const [formData, setFormData] = useState({
         email: '',
         pin_number: '',
@@ -36,20 +36,27 @@ const GatepassForm = () => {
             // Handle successful submission (e.g., reset form, show a success message)
             alert('Gatepass submitted successfully!');
             console.log(response);
-            // setFormData({
-            //     email: '',
-            //     pin_number: '',
-            //     room_number: '',
-            //     surname: '',
-            //     name: '',
-            //     father_name: '',
-            //     department: 'college student',
-            //     outgoing_date: '',
-            //     outgoing_time: '',
-            //     permission_upto_date: '',
-            //     permission_upto_time: '',
-            //     reason: ''
-            // });
+
+            // Call the onFormSubmit prop to update the list
+            if (onFormSubmit) {
+                onFormSubmit();
+            }
+
+            setFormData({
+                email: '',
+                pin_number: '',
+                room_number: '',
+                surname: '',
+                name: '',
+                father_name: '',
+                department: 'college student',
+                outgoing_date: '',
+                outgoing_time: '',
+                permission_upto_date: '',
+                permission_upto_time: '',
+                reason: ''
+            });
+            
         } catch (error) {
             console.error('Error submitting gatepass:', error);
             alert('Failed to submit gatepass.');

@@ -2,26 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import GatepassForm from './Gatepassform'; 
 
 const GatepassList = () => {
     const [gatepasses, setGatepasses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchGatepasses = async () => {
+        try {
+            // const response = await axios.get('http://localhost:5000/api/gatepass');
+            const response = await axios.get('http://192.168.19.9:5000/api/gatepass');
+            setGatepasses(response.data);
+        } catch (err) {
+            setError('Failed to fetch gatepass data');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchGatepasses = async () => {
-            try {
-                // const response = await axios.get('http://localhost:5000/api/gatepass');
-                const response = await axios.get('http://192.168.19.9:5000/api/gatepass');
-                setGatepasses(response.data);
-            } catch (err) {
-                setError('Failed to fetch gatepass data');
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchGatepasses();
     }, []);
 
@@ -32,6 +34,7 @@ const GatepassList = () => {
             });
             // Filter out the deleted gatepass from the state
             // setGatepasses(gatepasses.filter(gatepass => gatepass.gatepass_number !== gatepass_number));
+            fetchGatepasses();
             alert('Gatepass deleted successfully.');
         } catch (err) {
             console.error(err);
@@ -49,7 +52,10 @@ const GatepassList = () => {
 
     return (
         <div>
+            <GatepassForm onFormSubmit={fetchGatepasses} />
+
             <h1>Gatepass Records</h1>
+
             <table>
                 <thead>
                     <tr>
@@ -85,9 +91,9 @@ const GatepassList = () => {
                             <td>{new Date(gatepass.permission_upto_time).toLocaleTimeString()}</td>
                             <td>{gatepass.reason}</td>
                             <td>
-                                <button onClick={() => handleDelete(gatepass.gatepass_number)}>
-                                    Delete
-                                </button>
+                                {/* <button onClick={() => handleDelete(gatepass.gatepass_number)}> */}
+                                    <FontAwesomeIcon icon={faTrashAlt} style={{ color: 'red' }} onClick={() => handleDelete(gatepass.gatepass_number)}/>
+                                {/* </button> */}
                             </td>
                         </tr>
                     ))}
