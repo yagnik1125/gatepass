@@ -6,7 +6,7 @@ import GatepassList from "./GatepassList";
 function App() {
   return (
     <div>
-      {/* <GatepassForm /> */}
+      <GatepassForm />
       <GatepassList/>
     </div>
   );

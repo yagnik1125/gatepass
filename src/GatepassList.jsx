@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import GatepassForm from './Gatepassform'; 
+// import GatepassForm from './Gatepassform'; 
 
 const GatepassList = () => {
     const [gatepasses, setGatepasses] = useState([]);
@@ -52,7 +52,7 @@ const GatepassList = () => {
 
     return (
         <div>
-            <GatepassForm onFormSubmit={fetchGatepasses} />
+            {/* <GatepassForm onFormSubmit={fetchGatepasses} /> */}
 
             <h1>Gatepass Records</h1>
 

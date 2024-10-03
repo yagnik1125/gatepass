@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const GatepassForm = ({ onFormSubmit }) => {
+const GatepassForm = () => {
     const [formData, setFormData] = useState({
         email: '',
         pin_number: '',
@@ -37,10 +37,10 @@ const GatepassForm = ({ onFormSubmit }) => {
             alert('Gatepass submitted successfully!');
             console.log(response);
 
-            // Call the onFormSubmit prop to update the list
-            if (onFormSubmit) {
-                onFormSubmit();
-            }
+            // // Call the onFormSubmit prop to update the list
+            // if (onFormSubmit) {
+            //     onFormSubmit();
+            // }
 
             setFormData({
                 email: '',
