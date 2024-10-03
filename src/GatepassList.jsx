@@ -29,7 +29,7 @@ const GatepassList = () => {
 
     const handleDelete = async (gatepass_number) => {
         try {
-            await axios.delete('http://192.168.19.9:5000/api/deletegatepass', {
+            await axios.delete('http://192.168.19.9:5000/api/deleteGatepass', {
                 data: { gatepass_number }
             });
             // Filter out the deleted gatepass from the state
@@ -59,6 +59,7 @@ const GatepassList = () => {
             <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Gatepass Number</th>
                         <th>Email</th>
                         <th>PIN Number</th>
@@ -72,11 +73,18 @@ const GatepassList = () => {
                         <th>Permission Upto Date</th>
                         <th>Permission Upto Time</th>
                         <th>Reason</th>
+                        <th>Date In</th>
+                        <th>Time In</th>
                     </tr>
                 </thead>
                 <tbody>
                     {gatepasses.map((gatepass) => (
                         <tr key={gatepass.gatepass_number}>
+                            <td>
+                                {/* <button onClick={() => handleDelete(gatepass.gatepass_number)}> */}
+                                    <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#e54522' }} onClick={() => handleDelete(gatepass.gatepass_number)}/>
+                                {/* </button> */}
+                            </td>
                             <td>{gatepass.gatepass_number}</td>
                             <td>{gatepass.email}</td>
                             <td>{gatepass.pin_number}</td>
@@ -90,11 +98,8 @@ const GatepassList = () => {
                             <td>{new Date(gatepass.permission_upto_date).toLocaleDateString()}</td>
                             <td>{new Date(gatepass.permission_upto_time).toLocaleTimeString()}</td>
                             <td>{gatepass.reason}</td>
-                            <td>
-                                {/* <button onClick={() => handleDelete(gatepass.gatepass_number)}> */}
-                                    <FontAwesomeIcon icon={faTrashAlt} style={{ color: 'red' }} onClick={() => handleDelete(gatepass.gatepass_number)}/>
-                                {/* </button> */}
-                            </td>
+                            <td>{gatepass.date_in}</td>
+                            <td>{gatepass.time_in}</td>
                         </tr>
                     ))}
                 </tbody>

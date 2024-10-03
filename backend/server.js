@@ -85,7 +85,9 @@ app.get('/api/gatepass', async (req, res) => {
                 outgoing_time: row[9],
                 permission_upto_date: row[10],
                 permission_upto_time: row[11],
-                reason: row[12]
+                reason: row[12],
+                date_in:row[13],
+                time_in:row[14]
             };
         });
         // Send the transformed response
@@ -108,7 +110,7 @@ app.get('/api/gatepass', async (req, res) => {
 });
 
 //post api for creating gatepass
-app.post('/api/gatepassform', async (req, res) => {
+app.post('/api/gatepassForm', async (req, res) => {
     let connection;
     let { email, pin_number, room_number, surname, name, father_name, department, outgoing_date, outgoing_time, permission_upto_date, permission_upto_time, reason } = req.body;
     outgoing_time = outgoing_date + ' ' + outgoing_time;
@@ -189,7 +191,7 @@ app.post('/api/gatepassform', async (req, res) => {
 });
 
 //delete api for deleting gatepass
-app.delete('/api/deletegatepass', async (req, res) => {
+app.delete('/api/deleteGatepass', async (req, res) => {
     let connection;
     let {gatepass_number} = req.body;
 
@@ -228,7 +230,7 @@ app.delete('/api/deletegatepass', async (req, res) => {
     }
 });
 
-
+app.put('/api/updateEntry')
 
 // Start the server and initialize the connection pool
 async function startServer() {

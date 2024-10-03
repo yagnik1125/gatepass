@@ -30,8 +30,8 @@ const GatepassForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // const responselocal = await axios.post('http://localhost:5000/api/gatepassform', formData);
-            const response = await axios.post('http://192.168.19.9:5000/api/gatepassform', formData);
+            // const responselocal = await axios.post('http://localhost:5000/api/gatepassForm', formData);
+            const response = await axios.post('http://192.168.19.9:5000/api/gatepassForm', formData);
             // console.log('Response:', response.data);
             // Handle successful submission (e.g., reset form, show a success message)
             alert('Gatepass submitted successfully!');
