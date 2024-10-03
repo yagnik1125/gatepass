@@ -98,8 +98,8 @@ const GatepassList = () => {
                             <td>{new Date(gatepass.permission_upto_date).toLocaleDateString()}</td>
                             <td>{new Date(gatepass.permission_upto_time).toLocaleTimeString()}</td>
                             <td>{gatepass.reason}</td>
-                            <td>{gatepass.date_in}</td>
-                            <td>{gatepass.time_in}</td>
+                            <td>{gatepass.date_in ? new Date(gatepass.date_in).toLocaleDateString() : ''}</td>
+                            <td>{gatepass.time_in ? new Date(gatepass.time_in).toLocaleTimeString() : ''}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -86,8 +86,8 @@ app.get('/api/gatepass', async (req, res) => {
                 permission_upto_date: row[10],
                 permission_upto_time: row[11],
                 reason: row[12],
-                date_in:row[13],
-                time_in:row[14]
+                date_in: row[13],
+                time_in: row[14]
             };
         });
         // Send the transformed response
@@ -193,7 +193,7 @@ app.post('/api/gatepassForm', async (req, res) => {
 //delete api for deleting gatepass
 app.delete('/api/deleteGatepass', async (req, res) => {
     let connection;
-    let {gatepass_number} = req.body;
+    let { gatepass_number } = req.body;
 
     console.log(gatepass_number);
 
@@ -208,7 +208,7 @@ app.delete('/api/deleteGatepass', async (req, res) => {
         `;
 
         // Executing the SQL query
-        const result = await connection.execute(query, {gatepass_number});
+        const result = await connection.execute(query, { gatepass_number });
 
         // Commit the changes to the database
         await connection.commit();
@@ -230,7 +230,26 @@ app.delete('/api/deleteGatepass', async (req, res) => {
     }
 });
 
-app.put('/api/updateEntry')
+app.put('/api/updateEntry', async (req, res) => {
+    let connection;
+    let { gatepass_number, date_in, time_in } = req.body;
+    time_in = date_in + " " + time_in;
+    try {
+        connection = await pool.getConnection();
+        const query = `
+            UPDATE gatepassdetails
+            SET date_in = TO_DATE(:date_in, 'YYYY-MM-DD'), time_in = TO_TIMESTAMP(:time_in, 'YYYY-MM-DD HH24:MI:SS')
+            WHERE gatepass_number = :gatepass_number
+        `;
+        const result = await connection.execute(query, { gatepass_number,date_in,time_in });
+        await connection.commit();
+        res.status(200).json({ message: 'Entry Done.' });
+    }
+    catch (err) {
+        console.error('Error updating gatepass:', err);
+        res.status(500).json({ error: 'Failed to update gatepass.' });
+    }
+});
 
 // Start the server and initialize the connection pool
 async function startServer() {
