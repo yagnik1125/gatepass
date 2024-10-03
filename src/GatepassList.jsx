@@ -27,6 +27,33 @@ const GatepassList = () => {
         fetchGatepasses();
     }, []);
 
+    const handleEntry = async (gatepass_number) => {
+        const currentDate = new Date();
+        
+        // Get the current date and time in the required format
+        const date_in = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+        const time_in = currentDate.toTimeString().split(' ')[0]; // HH:MM:SS format
+        
+        try {
+            // Make the API request to update the entry
+            const response = await axios.put('http://192.168.19.9:5000/api/updateEntry', {
+                gatepass_number,
+                date_in,
+                time_in
+            });
+    
+            // Handle successful response
+            if (response.status === 200) {
+                alert('Entry Done Successfully.');
+                fetchGatepasses();
+                // Optionally refresh the data or update the table UI here
+            }
+        } catch (error) {
+            console.error('Error updating entry:', error);
+            alert('Failed to update entry.');
+        }
+    };
+
     const handleDelete = async (gatepass_number) => {
         try {
             await axios.delete('http://192.168.19.9:5000/api/deleteGatepass', {
@@ -82,7 +109,7 @@ const GatepassList = () => {
                         <tr key={gatepass.gatepass_number}>
                             <td>
                                 {/* <button onClick={() => handleDelete(gatepass.gatepass_number)}> */}
-                                    <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#e54522' }} onClick={() => handleDelete(gatepass.gatepass_number)}/>
+                                <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#e54522' }} onClick={() => handleDelete(gatepass.gatepass_number)} />
                                 {/* </button> */}
                             </td>
                             <td>{gatepass.gatepass_number}</td>
@@ -100,6 +127,9 @@ const GatepassList = () => {
                             <td>{gatepass.reason}</td>
                             <td>{gatepass.date_in ? new Date(gatepass.date_in).toLocaleDateString() : ''}</td>
                             <td>{gatepass.time_in ? new Date(gatepass.time_in).toLocaleTimeString() : ''}</td>
+                            <td>
+                                <button onClick={() => handleEntry(gatepass.gatepass_number)}>Entry</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
