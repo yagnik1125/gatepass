@@ -7,6 +7,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import GatepassForm from './Gatepassform'; 
 
 const GatepassList = () => {
+    const [pinNumber, setPinNumber] = useState('');
     const [gatepasses, setGatepasses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,8 +15,30 @@ const GatepassList = () => {
     const fetchGatepasses = async () => {
         try {
             // const response = await axios.get('http://localhost:5000/api/gatepass');
-            const response = await axios.get('http://192.168.19.9:5000/api/gatepass');
-            setGatepasses(response.data);
+            if (pinNumber) {
+                console.log(pinNumber);
+                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);
+                const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {
+                    params: {
+                        pin_number: pinNumber
+                    }
+                });
+                // Handle successful response
+                console.log(response.data);
+                if (response.status === 200) {
+                    // Optionally refresh the data or update the table UI here
+                    setGatepasses(response.data);
+                }
+            }
+            else {
+                const response = await axios.get(`http://192.168.19.9:5000/api/gatepass`);
+                // Handle successful response
+                if (response.status === 200) {
+                    // Optionally refresh the data or update the table UI here
+                    setGatepasses(response.data);
+                }
+            }
+            // setGatepasses(response.data);
         } catch (err) {
             setError('Failed to fetch gatepass data');
             console.error(err);
@@ -29,19 +52,19 @@ const GatepassList = () => {
 
     const handleEntry = async (gatepass_number) => {
         const currentDate = new Date();
-        
+
         // Get the current date and time in the required format
         const date_in = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
         const time_in = currentDate.toTimeString().split(' ')[0]; // HH:MM:SS format
-        
+
         try {
             // Make the API request to update the entry
-            const response = await axios.put('http://192.168.19.9:5000/api/updateEntry', {
+            const response = await axios.put(`http://192.168.19.9:5000/api/updateEntry`, {
                 gatepass_number,
                 date_in,
                 time_in
             });
-    
+
             // Handle successful response
             if (response.status === 200) {
                 alert('Entry Done Successfully.');
@@ -56,7 +79,7 @@ const GatepassList = () => {
 
     const handleDelete = async (gatepass_number) => {
         try {
-            await axios.delete('http://192.168.19.9:5000/api/deleteGatepass', {
+            await axios.delete(`http://192.168.19.9:5000/api/deleteGatepass`, {
                 data: { gatepass_number }
             });
             // Filter out the deleted gatepass from the state
@@ -82,6 +105,22 @@ const GatepassList = () => {
             {/* <GatepassForm onFormSubmit={fetchGatepasses} /> */}
 
             <h1>Gatepass Records</h1>
+
+            <div>
+                <input
+                    type="text"
+                    placeholder="Enter PIN Number"
+                    value={pinNumber}
+                    onChange={(e) => setPinNumber(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            fetchGatepasses(); // Call the fetchGatepasses function when Enter is pressed
+                        }
+                    }}
+                />
+                <button onClick={fetchGatepasses}>Find</button>
+            </div>
+            {error && <p style={{ color: '#e54522' }}>{error}</p>}
 
             <table>
                 <thead>

@@ -241,13 +241,77 @@ app.put('/api/updateEntry', async (req, res) => {
             SET date_in = TO_DATE(:date_in, 'YYYY-MM-DD'), time_in = TO_TIMESTAMP(:time_in, 'YYYY-MM-DD HH24:MI:SS')
             WHERE gatepass_number = :gatepass_number
         `;
-        const result = await connection.execute(query, { gatepass_number,date_in,time_in });
+        const result = await connection.execute(query, { gatepass_number, date_in, time_in });
         await connection.commit();
+        // Send the transformed response
         res.status(200).json({ message: 'Entry Done.' });
     }
     catch (err) {
         console.error('Error updating gatepass:', err);
         res.status(500).json({ error: 'Failed to update gatepass.' });
+    }
+    finally {
+        if (connection) {
+            try {
+                // Release the connection back to the pool
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+app.get("/api/gatepassByPin", async (req, res) => {
+    let connection;
+    const { pin_number } = req.query;
+    console.log(pin_number);
+    try {
+        connection = await pool.getConnection();
+        const query = `
+                SELECT * FROM gatepassdetails
+                WHERE pin_number = :pin_number ORDER BY gatepass_number DESC
+            `;
+        const result = await connection.execute(query, { pin_number });
+
+        await connection.commit();
+        // Transform the result to the desired format
+        const transformedResults = result.rows.map(row => {
+            return {
+                gatepass_number: row[0],
+                email: row[1],
+                pin_number: row[2],
+                room_number: row[3],
+                surname: row[4],
+                name: row[5],
+                father_name: row[6],
+                department: row[7],
+                outgoing_date: row[8],
+                outgoing_time: row[9],
+                permission_upto_date: row[10],
+                permission_upto_time: row[11],
+                reason: row[12],
+                date_in: row[13],
+                time_in: row[14]
+            };
+        });
+        // Send the transformed response
+        res.status(200).json(transformedResults);
+        // res.status(200).json(result.rows);
+    }
+    catch (err) {
+        console.error('Error fetching gatepass:', err);
+        res.status(500).json({ error: 'Failed to fetch gatepass.' });
+    }
+    finally {
+        if (connection) {
+            try {
+                // Release the connection back to the pool
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
     }
 });
 
