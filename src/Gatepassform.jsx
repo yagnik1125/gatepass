@@ -158,7 +158,9 @@ const GatepassForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://10.7.68.89:5000/api/gatepassForm', formData);
+            // const responselocal = await axios.post('http://localhost:5000/api/gatepassForm', formData);
+            // const response = await axios.post('http://192.168.19.9:5000/api/gatepassForm', formData);//sgvp
+            const response = await axios.post('http://10.7.68.89:5000/api/gatepassForm', formData);//nirma
             alert('Gatepass submitted successfully!');
             console.log(response);
 
