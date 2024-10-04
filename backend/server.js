@@ -324,8 +324,12 @@ async function startServer() {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 
-    app.listen(PORT, '192.168.19.9', () => {
-        console.log(`Server is running on http://192.168.19.9:${PORT}`);
+    // app.listen(PORT, '192.168.19.9', () => {
+    //     console.log(`Server is running on http://192.168.19.9:${PORT}`);
+    // });
+
+    app.listen(PORT, '10.7.68.89', () => {
+        console.log(`Server is running on http://10.7.68.89:${PORT}`);
     });
 }
 

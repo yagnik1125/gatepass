@@ -17,8 +17,9 @@ const GatepassList = () => {
             // const response = await axios.get('http://localhost:5000/api/gatepass');
             if (pinNumber) {
                 console.log(pinNumber);
-                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);
-                const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {
+                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);//sgvp
+                // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {//sgvp
+                const response = await axios.get('http://10.7.68.89:5000/api/gatepassByPin', {//nirma
                     params: {
                         pin_number: pinNumber
                     }
@@ -31,7 +32,8 @@ const GatepassList = () => {
                 }
             }
             else {
-                const response = await axios.get(`http://192.168.19.9:5000/api/gatepass`);
+                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepass`);//sgvp
+                const response = await axios.get(`http://10.7.68.89:5000/api/gatepass`);//nirma
                 // Handle successful response
                 if (response.status === 200) {
                     // Optionally refresh the data or update the table UI here
@@ -50,36 +52,57 @@ const GatepassList = () => {
         fetchGatepasses();
     }, []);
 
-    const handleEntry = async (gatepass_number) => {
-        const currentDate = new Date();
+    // const handleEntry = async (gatepass_number) => {
+    const handleEntry = async (gatepass_number, date_in, time_in) => {
+        if (date_in === null && time_in === null) {
+            const currentDate = new Date();
 
-        // Get the current date and time in the required format
-        const date_in = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
-        const time_in = currentDate.toTimeString().split(' ')[0]; // HH:MM:SS format
+            console.log(currentDate);
 
-        try {
-            // Make the API request to update the entry
-            const response = await axios.put(`http://192.168.19.9:5000/api/updateEntry`, {
-                gatepass_number,
-                date_in,
-                time_in
-            });
+            // // Get the current date and time in the required format
+            // const date_in = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+            // const time_in = currentDate.toTimeString().split(' ')[0]; // HH:MM:SS format
 
-            // Handle successful response
-            if (response.status === 200) {
-                alert('Entry Done Successfully.');
-                fetchGatepasses();
-                // Optionally refresh the data or update the table UI here
+            // Get the date in YYYY-MM-DD format
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so we add 1
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const date_in = `${year}-${month}-${day}`; // YYYY-MM-DD format
+
+            // Get the time in HH:MM:SS format
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+            const time_in = `${hours}:${minutes}:${seconds}`; // HH:MM:SS format
+
+            console.log(date_in, time_in);
+
+            try {
+                // Make the API request to update the entry
+                // const response = await axios.put(`http://192.168.19.9:5000/api/updateEntry`, {//sgvp
+                const response = await axios.put(`http://10.7.68.89:5000/api/updateEntry`, {//nirma
+                    gatepass_number,
+                    date_in,
+                    time_in
+                });
+
+                // Handle successful response
+                if (response.status === 200) {
+                    alert('Entry Done Successfully.');
+                    fetchGatepasses();
+                    // Optionally refresh the data or update the table UI here
+                }
+            } catch (error) {
+                console.error('Error updating entry:', error);
+                alert('Failed to update entry.');
             }
-        } catch (error) {
-            console.error('Error updating entry:', error);
-            alert('Failed to update entry.');
         }
     };
 
     const handleDelete = async (gatepass_number) => {
         try {
-            await axios.delete(`http://192.168.19.9:5000/api/deleteGatepass`, {
+            // await axios.delete(`http://192.168.19.9:5000/api/deleteGatepass`, {//sgvp
+            await axios.delete(`http://10.7.68.89:5000/api/deleteGatepass`, {//nirma
                 data: { gatepass_number }
             });
             // Filter out the deleted gatepass from the state
@@ -167,7 +190,7 @@ const GatepassList = () => {
                             <td>{gatepass.date_in ? new Date(gatepass.date_in).toLocaleDateString() : ''}</td>
                             <td>{gatepass.time_in ? new Date(gatepass.time_in).toLocaleTimeString() : ''}</td>
                             <td>
-                                <button onClick={() => handleEntry(gatepass.gatepass_number)}>Entry</button>
+                                <button onClick={() => handleEntry(gatepass.gatepass_number, gatepass.date_in, gatepass.time_in)}>Entry</button>
                             </td>
                         </tr>
                     ))}
