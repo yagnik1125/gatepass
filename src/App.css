@@ -60,13 +60,13 @@ table {
 th, td {
   padding: 10px;
   text-align: left;
-  border: 1px solid #ccc;
+  border: 1px solid #d3c0c0;
 }
 
 th {
-  background-color: #4a4242;
+  background-color: #757070;
 }
 
 tr:nth-child(even) {
-  background-color: #4a4242;
+  background-color: #757070;
 }

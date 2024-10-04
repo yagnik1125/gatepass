@@ -7,6 +7,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 // import GatepassForm from './Gatepassform'; 
 
 const GatepassList = () => {
+    const [gatepassNumber, setGatepassNumber] = useState('');
     const [pinNumber, setPinNumber] = useState('');
     const [gatepasses, setGatepasses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,14 +15,46 @@ const GatepassList = () => {
 
     const fetchGatepasses = async () => {
         try {
-            // const response = await axios.get('http://localhost:5000/api/gatepass');
-            if (pinNumber) {
-                console.log(pinNumber);
-                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);//sgvp
-                // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {//sgvp
-                const response = await axios.get('http://10.7.68.89:5000/api/gatepassByPin', {//nirma
+            // if (pinNumber) {
+            //     console.log(pinNumber);
+            //     // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);//sgvp
+            //     // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {//sgvp
+            //     const response = await axios.get('http://10.7.68.89:5000/api/gatepassByPin', {//nirma
+            //         params: {
+            //             pin_number: pinNumber
+            //         }
+            //     });
+            //     // Handle successful response
+            //     console.log(response.data);
+            //     if (response.status === 200) {
+            //         // Optionally refresh the data or update the table UI here
+            //         setGatepasses(response.data);
+            //     }
+            // }
+            // else if(gatepassNumber){
+            //     console.log(gatepassNumber);
+            //     // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByGatepassNumber?gatepass_number=${gatepassNumber}`);//sgvp
+            //     // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByGatepassNumber', {//sgvp
+            //     const response = await axios.get('http://10.7.68.89:5000/api/gatepassByGatepassNumber', {//nirma
+            //         params: {
+            //             gatepass_number: gatepassNumber
+            //         }
+            //     });
+            //     // Handle successful response
+            //     console.log(response.data);
+            //     if (response.status === 200) {
+            //         // Optionally refresh the data or update the table UI here
+            //         setGatepasses(response.data);
+            //     }
+            // }
+
+            if (pinNumber || gatepassNumber) {
+                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByDetails?pin_number=${pinNumber}?gatepass_number=${gatepassNumber}`);//sgvp
+                // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByDetails', {//sgvp
+                const response = await axios.get('http://10.7.68.89:5000/api/gatepassByDetails', {//nirma
                     params: {
-                        pin_number: pinNumber
+                        pin_number: pinNumber,
+                        gatepass_number: gatepassNumber
                     }
                 });
                 // Handle successful response
@@ -141,9 +174,26 @@ const GatepassList = () => {
                         }
                     }}
                 />
+                <input
+                    type="text"
+                    placeholder="Enter Gatepass Number"
+                    value={gatepassNumber}
+                    onChange={(e) => setGatepassNumber(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            fetchGatepasses(); // Call the fetchGatepasses function when Enter is pressed
+                        }
+                    }}
+                />
                 <button onClick={fetchGatepasses}>Find</button>
             </div>
             {error && <p style={{ color: '#e54522' }}>{error}</p>}
+
+            {/* <div>
+                
+                <button onClick={fetchGatepasses}>Find</button>
+            </div>
+            {error && <p style={{ color: '#e54522' }}>{error}</p>} */}
 
             <table>
                 <thead>

@@ -315,6 +315,136 @@ app.get("/api/gatepassByPin", async (req, res) => {
     }
 });
 
+app.get("/api/gatepassByGatepassNumber", async (req, res) => {
+    let connection;
+    const { gatepass_number } = req.query;
+    console.log(gatepass_number);
+    try {
+        connection = await pool.getConnection();
+        const query = `
+                SELECT * FROM gatepassdetails
+                WHERE gatepass_number = :gatepass_number
+            `;
+        const result = await connection.execute(query, { gatepass_number });
+
+        await connection.commit();
+        // Transform the result to the desired format
+        const transformedResults = result.rows.map(row => {
+            return {
+                gatepass_number: row[0],
+                email: row[1],
+                pin_number: row[2],
+                room_number: row[3],
+                surname: row[4],
+                name: row[5],
+                father_name: row[6],
+                department: row[7],
+                outgoing_date: row[8],
+                outgoing_time: row[9],
+                permission_upto_date: row[10],
+                permission_upto_time: row[11],
+                reason: row[12],
+                date_in: row[13],
+                time_in: row[14]
+            };
+        });
+        // Send the transformed response
+        res.status(200).json(transformedResults);
+        // res.status(200).json(result.rows);
+    }
+    catch (err) {
+        console.error('Error fetching gatepass:', err);
+        res.status(500).json({ error: 'Failed to fetch gatepass.' });
+    }
+    finally {
+        if (connection) {
+            try {
+                // Release the connection back to the pool
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+app.get("/api/gatepassByDetails", async (req, res) => {
+    let connection;
+    const { pin_number, gatepass_number } = req.query;
+
+    try {
+        connection = await pool.getConnection();
+
+        // Base query to fetch gatepass details
+        let query = `
+            SELECT * FROM gatepassdetails WHERE 1=1
+        `;
+
+        // Add conditions dynamically based on provided query params
+        // const conditions = [];
+        const params = {};
+
+        // Add conditions based on the presence of query parameters
+        if (pin_number && gatepass_number) {
+            // If both pin_number and gatepass_number are provided, fetch records matching either one
+            query += ` AND (pin_number = :pin_number OR gatepass_number = :gatepass_number)`;
+            params.pin_number = pin_number;
+            params.gatepass_number = gatepass_number;
+        } else if (pin_number) {
+            // If only pin_number is provided
+            query += ` AND pin_number = :pin_number`;
+            params.pin_number = pin_number;
+        } else if (gatepass_number) {
+            // If only gatepass_number is provided
+            query += ` AND gatepass_number = :gatepass_number`;
+            params.gatepass_number = gatepass_number;
+        }
+
+        // Execute the query with dynamic parameters
+        const result = await connection.execute(query, params);
+
+        await connection.commit();
+
+        // Transform the result to the desired format
+        const transformedResults = result.rows.map(row => {
+            return {
+                gatepass_number: row[0],
+                email: row[1],
+                pin_number: row[2],
+                room_number: row[3],
+                surname: row[4],
+                name: row[5],
+                father_name: row[6],
+                department: row[7],
+                outgoing_date: row[8],
+                outgoing_time: row[9],
+                permission_upto_date: row[10],
+                permission_upto_time: row[11],
+                reason: row[12],
+                date_in: row[13],
+                time_in: row[14]
+            };
+        });
+
+        // Send the transformed response
+        res.status(200).json(transformedResults);
+    }
+    catch (err) {
+        console.error('Error fetching gatepass:', err);
+        res.status(500).json({ error: 'Failed to fetch gatepass.' });
+    }
+    finally {
+        if (connection) {
+            try {
+                // Release the connection back to the pool
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
 // Start the server and initialize the connection pool
 async function startServer() {
     await initializePool();
