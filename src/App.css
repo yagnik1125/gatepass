@@ -51,7 +51,7 @@ h1 {
   text-align: center;
 }
 
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -69,4 +69,4 @@ th {
 
 tr:nth-child(even) {
   background-color: #757070;
-}
+} */

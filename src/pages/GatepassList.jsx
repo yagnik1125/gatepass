@@ -12,44 +12,11 @@ const GatepassList = () => {
 
     const fetchGatepasses = async () => {
         try {
-            // if (pinNumber) {
-            //     console.log(pinNumber);
-            //     // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByPin?pin_number=${pinNumber}`);//sgvp
-            //     // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByPin', {//sgvp
-            //     const response = await axios.get('http://10.7.68.89:5000/api/gatepassByPin', {//nirma
-            //         params: {
-            //             pin_number: pinNumber
-            //         }
-            //     });
-            //     // Handle successful response
-            //     console.log(response.data);
-            //     if (response.status === 200) {
-            //         // Optionally refresh the data or update the table UI here
-            //         setGatepasses(response.data);
-            //     }
-            // }
-            // else if(gatepassNumber){
-            //     console.log(gatepassNumber);
-            //     // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByGatepassNumber?gatepass_number=${gatepassNumber}`);//sgvp
-            //     // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByGatepassNumber', {//sgvp
-            //     const response = await axios.get('http://10.7.68.89:5000/api/gatepassByGatepassNumber', {//nirma
-            //         params: {
-            //             gatepass_number: gatepassNumber
-            //         }
-            //     });
-            //     // Handle successful response
-            //     console.log(response.data);
-            //     if (response.status === 200) {
-            //         // Optionally refresh the data or update the table UI here
-            //         setGatepasses(response.data);
-            //     }
-            // }
-
             if (pinNumber || gatepassNumber) {
                 // const response = await axios.get(`http://192.168.19.9:5000/api/gatepass/gatepassByDetails?pin_number=${pinNumber}?gatepass_number=${gatepassNumber}`);//sgvp
                 // const response = await axios.get('http://192.168.70.71:5000/api/gatepass/gatepassByDetails', {//harsh
                 const response = await axios.get('http://192.168.19.9:5000/api/gatepass/gatepassByDetails', {//sgvp
-                // const response = await axios.get('http://10.7.68.89:5000/api/gatepass/gatepassByDetails', {//nirma
+                    // const response = await axios.get('http://10.7.68.89:5000/api/gatepass/gatepassByDetails', {//nirma
                     params: {
                         pin_number: pinNumber,
                         gatepass_number: gatepassNumber
@@ -113,7 +80,7 @@ const GatepassList = () => {
                 // Make the API request to update the entry
                 // const response = await axios.put(`http://192.168.70.71:5000/api/gatepass/returnEntry`, {//harsh
                 const response = await axios.put(`http://192.168.19.9:5000/api/gatepass/returnEntry`, {//sgvp
-                // const response = await axios.put(`http://10.7.68.89:5000/api/updateEntry`, {//nirma
+                    // const response = await axios.put(`http://10.7.68.89:5000/api/updateEntry`, {//nirma
                     gatepass_number,
                     date_in,
                     time_in
@@ -136,7 +103,7 @@ const GatepassList = () => {
         try {
             // await axios.delete(`http://192.168.70.71:5000/api/gatepass/deleteGatepass`, {//harsh
             await axios.delete(`http://192.168.19.9:5000/api/gatepass/deleteGatepass`, {//sgvp
-            // await axios.delete(`http://10.7.68.89:5000/api/gatepass/deleteGatepass`, {//nirma
+                // await axios.delete(`http://10.7.68.89:5000/api/gatepass/deleteGatepass`, {//nirma
                 data: { gatepass_number }
             });
             // Filter out the deleted gatepass from the state
@@ -158,7 +125,7 @@ const GatepassList = () => {
     }
 
     return (
-        <div>
+        <div className='rounded-lg'>
             {/* <GatepassForm onFormSubmit={fetchGatepasses} /> */}
 
             <h1 className="text-center mb-5 text-2xl font-bold">Gatepass Records</h1>
@@ -188,7 +155,10 @@ const GatepassList = () => {
                         }
                     }}
                 />
-                <button onClick={fetchGatepasses}>Find</button>
+                <button
+                    onClick={fetchGatepasses}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors"
+                >Find</button>
             </div>
             {error && <p style={{ color: '#e54522' }}>{error}</p>}
 
@@ -198,7 +168,7 @@ const GatepassList = () => {
             </div>
             {error && <p style={{ color: '#e54522' }}>{error}</p>} */}
 
-            <table>
+            {/* <table>
                 <thead>
                     <tr>
                         <th></th>
@@ -223,9 +193,12 @@ const GatepassList = () => {
                     {gatepasses.map((gatepass) => (
                         <tr key={gatepass.gatepass_number}>
                             <td>
-                                {/* <button onClick={() => handleDelete(gatepass.gatepass_number)}> */}
-                                <FontAwesomeIcon icon={faTrashAlt} style={{ color: '#e54522' }} onClick={() => handleDelete(gatepass.gatepass_number)} />
-                                {/* </button> */}
+                                <button onClick={() => handleDelete(gatepass.gatepass_number)}>
+                                    <FontAwesomeIcon
+                                        icon={faTrashAlt} style={{ color: '#e54522' }}
+                                    // onClick={() => handleDelete(gatepass.gatepass_number)}
+                                    />
+                                </button>
                             </td>
                             <td>{gatepass.gatepass_number}</td>
                             <td>{gatepass.email}</td>
@@ -243,7 +216,76 @@ const GatepassList = () => {
                             <td>{gatepass.date_in ? new Date(gatepass.date_in).toLocaleDateString() : ''}</td>
                             <td>{gatepass.time_in ? new Date(gatepass.time_in).toLocaleTimeString() : ''}</td>
                             <td>
-                                <button onClick={() => handleEntry(gatepass.gatepass_number, gatepass.date_in, gatepass.time_in)}>Entry</button>
+                                <button
+                                    onClick={() => handleEntry(gatepass.gatepass_number, gatepass.date_in, gatepass.time_in)}
+                                >Entry</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table> */}
+
+            <table class="w-full table-auto border-collapse mt-5">
+                <thead>
+                    <tr class="bg-gray-700 text-white">
+                        <th className="px-4 py-2"></th>
+                        <th className="px-4 py-2">Gatepass Number</th>
+                        <th className="px-4 py-2">Email</th>
+                        <th className="px-4 py-2">PIN Number</th>
+                        <th className="px-4 py-2">Room Number</th>
+                        <th className="px-4 py-2">Surname</th>
+                        <th className="px-4 py-2">Name</th>
+                        <th className="px-4 py-2">Father Name</th>
+                        <th className="px-4 py-2">Department</th>
+                        <th className="px-4 py-2">Outgoing Date</th>
+                        <th className="px-4 py-2">Outgoing Time</th>
+                        <th className="px-4 py-2">Permission Upto Date</th>
+                        <th className="px-4 py-2">Permission Upto Time</th>
+                        <th className="px-4 py-2">Reason</th>
+                        <th className="px-4 py-2">Date In</th>
+                        <th className="px-4 py-2">Time In</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-300">
+                    {gatepasses.map((gatepass) => (
+                        <tr
+                            key={gatepass.gatepass_number}
+                            className="even:bg-gray-300 hover:bg-gray-400 transition-colors"
+                        >
+                            <td className="px-4 py-2">
+                                <button onClick={() => handleDelete(gatepass.gatepass_number)}>
+                                    <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        className='text-red-500'
+                                    />
+                                </button>
+                            </td>
+                            <td className="px-4 py-2">{gatepass.gatepass_number}</td>
+                            <td className="px-4 py-2">{gatepass.email}</td>
+                            <td className="px-4 py-2">{gatepass.pin_number}</td>
+                            <td className="px-4 py-2">{gatepass.room_number}</td>
+                            <td className="px-4 py-2">{gatepass.surname}</td>
+                            <td className="px-4 py-2">{gatepass.name}</td>
+                            <td className="px-4 py-2">{gatepass.father_name}</td>
+                            <td className="px-4 py-2">{gatepass.department}</td>
+                            <td className="px-4 py-2">{new Date(gatepass.outgoing_date).toLocaleDateString()}</td>
+                            <td className="px-4 py-2">{new Date(gatepass.outgoing_time).toLocaleTimeString()}</td>
+                            <td className="px-4 py-2">{new Date(gatepass.permission_upto_date).toLocaleDateString()}</td>
+                            <td className="px-4 py-2">{new Date(gatepass.permission_upto_time).toLocaleTimeString()}</td>
+                            <td className="px-4 py-2">{gatepass.reason}</td>
+                            <td className="px-4 py-2">
+                                {gatepass.date_in ? new Date(gatepass.date_in).toLocaleDateString() : ''}
+                            </td>
+                            <td className="px-4 py-2">
+                                {gatepass.time_in ? new Date(gatepass.time_in).toLocaleTimeString() : ''}
+                            </td>
+                            <td className="px-4 py-2">
+                                <button
+                                    onClick={() => handleEntry(gatepass.gatepass_number, gatepass.date_in, gatepass.time_in)}
+                                    className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors"
+                                >
+                                    Entry
+                                </button>
                             </td>
                         </tr>
                     ))}
