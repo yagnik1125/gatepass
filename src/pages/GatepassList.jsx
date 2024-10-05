@@ -1,10 +1,7 @@
-// src/GatepassList.jsx
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-// import GatepassForm from './Gatepassform'; 
 
 const GatepassList = () => {
     const [gatepassNumber, setGatepassNumber] = useState('');
@@ -49,9 +46,10 @@ const GatepassList = () => {
             // }
 
             if (pinNumber || gatepassNumber) {
-                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepassByDetails?pin_number=${pinNumber}?gatepass_number=${gatepassNumber}`);//sgvp
-                // const response = await axios.get('http://192.168.19.9:5000/api/gatepassByDetails', {//sgvp
-                const response = await axios.get('http://10.7.68.89:5000/api/gatepassByDetails', {//nirma
+                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepass/gatepassByDetails?pin_number=${pinNumber}?gatepass_number=${gatepassNumber}`);//sgvp
+                // const response = await axios.get('http://192.168.70.71:5000/api/gatepass/gatepassByDetails', {//harsh
+                const response = await axios.get('http://192.168.19.9:5000/api/gatepass/gatepassByDetails', {//sgvp
+                // const response = await axios.get('http://10.7.68.89:5000/api/gatepass/gatepassByDetails', {//nirma
                     params: {
                         pin_number: pinNumber,
                         gatepass_number: gatepassNumber
@@ -65,8 +63,9 @@ const GatepassList = () => {
                 }
             }
             else {
-                // const response = await axios.get(`http://192.168.19.9:5000/api/gatepass`);//sgvp
-                const response = await axios.get(`http://10.7.68.89:5000/api/gatepass`);//nirma
+                // const response = await axios.get(`http://192.168.70.71:5000/api/gatepass/fetchAllGatepass`);//harsh
+                const response = await axios.get(`http://192.168.19.9:5000/api/gatepass/fetchAllGatepass`);//sgvp
+                // const response = await axios.get(`http://10.7.68.89:5000/api/gatepass/fetchAllGatepass`);//nirma
                 // Handle successful response
                 if (response.status === 200) {
                     // Optionally refresh the data or update the table UI here
@@ -112,8 +111,9 @@ const GatepassList = () => {
 
             try {
                 // Make the API request to update the entry
-                // const response = await axios.put(`http://192.168.19.9:5000/api/updateEntry`, {//sgvp
-                const response = await axios.put(`http://10.7.68.89:5000/api/updateEntry`, {//nirma
+                // const response = await axios.put(`http://192.168.70.71:5000/api/gatepass/returnEntry`, {//harsh
+                const response = await axios.put(`http://192.168.19.9:5000/api/gatepass/returnEntry`, {//sgvp
+                // const response = await axios.put(`http://10.7.68.89:5000/api/updateEntry`, {//nirma
                     gatepass_number,
                     date_in,
                     time_in
@@ -134,8 +134,9 @@ const GatepassList = () => {
 
     const handleDelete = async (gatepass_number) => {
         try {
-            // await axios.delete(`http://192.168.19.9:5000/api/deleteGatepass`, {//sgvp
-            await axios.delete(`http://10.7.68.89:5000/api/deleteGatepass`, {//nirma
+            // await axios.delete(`http://192.168.70.71:5000/api/gatepass/deleteGatepass`, {//harsh
+            await axios.delete(`http://192.168.19.9:5000/api/gatepass/deleteGatepass`, {//sgvp
+            // await axios.delete(`http://10.7.68.89:5000/api/gatepass/deleteGatepass`, {//nirma
                 data: { gatepass_number }
             });
             // Filter out the deleted gatepass from the state
@@ -160,7 +161,7 @@ const GatepassList = () => {
         <div>
             {/* <GatepassForm onFormSubmit={fetchGatepasses} /> */}
 
-            <h1>Gatepass Records</h1>
+            <h1 className="text-center mb-5 text-2xl font-bold">Gatepass Records</h1>
 
             <div>
                 <input
@@ -168,6 +169,7 @@ const GatepassList = () => {
                     placeholder="Enter PIN Number"
                     value={pinNumber}
                     onChange={(e) => setPinNumber(e.target.value)}
+                    className="p-2 rounded-full border-2 border-gray-300 focus:border-blue-500"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             fetchGatepasses(); // Call the fetchGatepasses function when Enter is pressed
@@ -179,6 +181,7 @@ const GatepassList = () => {
                     placeholder="Enter Gatepass Number"
                     value={gatepassNumber}
                     onChange={(e) => setGatepassNumber(e.target.value)}
+                    className="p-2 rounded-full border-2 border-gray-300 focus:border-blue-500"
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             fetchGatepasses(); // Call the fetchGatepasses function when Enter is pressed

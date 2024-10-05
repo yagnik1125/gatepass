@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './App.css';
-import GatepassForm from "./Gatepassform";
-import GatepassList from "./GatepassList";
+import GatepassForm from "./pages/Gatepassform";
+import GatepassList from "./pages/GatepassList";
 
 function App() {
   // const router = createBrowserRouter(
